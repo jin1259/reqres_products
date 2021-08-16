@@ -8,8 +8,8 @@ phases:
   install:
     runtime-versions:
       java: corretto8
-#      docker: 18
-      docker: latest
+      docker: 18
+#      docker: latest
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -21,6 +21,10 @@ phases:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   build:
     commands:
+      - cd $CODEBUILD_SRC_DIR/ubuntu/standard/5.0
+      - docker build -t aws/codebuild/standard:5.0 .
+      - cd $CODEBUILD_SRC_DIR/al2/x86_64/standard/3.0
+      - docker build -t aws/codebuild/amazonlinux2-x86_64-standard:3.0 .
       - echo Build started on `date`
       - echo Building the Docker image...
       - mvn package -Dmaven.test.skip=true
